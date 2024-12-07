@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>113306057_Lab3_Number Guessing Game</title>
+  <style>
+    #result img {
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>113306057_Lab3_Number Guessing Game</h1>
+  <div id="result"></div>
+  <p>請輸入你要猜的數字 (範圍 1-100)：</p>
+  <input type="number" id="userInput" min="1" max="100">
+  <button id="submitGuess">提交</button>
+  <p id="message"></p>
+
+  <script>
+    let secretNumber;
+    let attemptsLeft;
+
+    function initializeGame() {
+      secretNumber = Math.floor(Math.random() * 100) + 1;
+      attemptsLeft = 7;
+      document.getElementById("result").innerHTML = ""; // 清空結果顯示
+      document.getElementById("message").innerText = ""; // 清空提示訊息
+      document.getElementById("userInput").value = ""; // 清空輸入框
+    }
+
+    function checkGuess() {
+      let userGuess = document.getElementById("userInput").value;
+
+      // Check if input is empty or not a number
+      if (userGuess.trim() === "" || isNaN(userGuess)) {
+        document.getElementById("message").innerText = "輸入無效，請輸入一個數字。";
+        return;
+      }
+
+      userGuess = Number(userGuess);
+
+      // Check if input is within the valid range
+      if (userGuess < 1 || userGuess > 100) {
+        document.getElementById("message").innerText = "請輸入範圍內的數字 (1-100)。";
+        return;
+      }
+
+      // Decrement attempts left
+      attemptsLeft--;
+
+      // Check if the guess is correct
+      if (userGuess === secretNumber) {
+        document.getElementById("message").innerText = "恭喜你答對了！";
+        document.getElementById("result").innerHTML = '<img src="correct.jpg" alt="Correct!">';
+      } else if (userGuess < secretNumber) {
+        document.getElementById("message").innerText = `太小了！再試一次。剩餘次數: ${attemptsLeft}`;
+      } else {
+        document.getElementById("message").innerText = `太大了！再試一次。剩餘次數: ${attemptsLeft}`;
+      }
+
+      // If user runs out of attempts
+      if (attemptsLeft <= 0 && userGuess !== secretNumber) {
+        document.getElementById("message").innerText = `你已經用完所有次數！正確答案是: ${secretNumber}`;
+        document.getElementById("result").innerHTML = '<img src="wrong.jpg" alt="Wrong!">';
+      }
+    }
+
+    window.onload = function() {
+      initializeGame();
+      document.getElementById("submitGuess").addEventListener("click", checkGuess);
+    };
+  </script>
+</body>
+</html>
